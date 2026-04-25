@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,6 +115,16 @@ button {
     margin-top: 15px;
 }
 
+.scorebox {
+    background: #000;
+    border: 2px solid #b58900;
+    border-radius: 16px;
+    padding: 12px;
+    margin-top: 15px;
+    color: #f4b400;
+    font-weight: bold;
+}
+
 .bookbutton {
     background:#f4b400;
     color:black;
@@ -144,9 +153,9 @@ of any date
 
 <div class="card" id="basic">
 <h2>Basic Calculations</h2>
-<p>Enter any date. Get the weekday instantly.</p>
+<p>Enter any date from 1700 to 2099. Get the weekday instantly.</p>
 
-<input type="date" id="dateInput">
+<input type="date" id="dateInput" min="1700-01-01" max="2099-12-31">
 
 <button onclick="getWeekday()">Find weekday</button>
 <button class="secondary" onclick="randomDate()">Random date</button>
@@ -156,7 +165,11 @@ of any date
 
 <div class="card" id="advanced" style="display:none;">
 <h2>B-Day Training</h2>
-<p class="small">Find the B-Day anchor first. Then find the year step.</p>
+<p class="small">1700–2099. Find the B-Day anchor first. Then find the year step.</p>
+
+<div class="scorebox">
+Score: <span id="score">0</span> · Streak: <span id="streak">0</span>
+</div>
 
 <div class="result" id="trainingDate">Press start.</div>
 
@@ -190,7 +203,7 @@ of any date
 
 <div class="card" id="pro" style="display:none;">
 <h2>Pro Calculations</h2>
-<p class="small">Older dates. Harder challenges. Same B-Day Method.</p>
+<p class="small">1700–2099. Harder challenges. Same B-Day Method.</p>
 
 <button onclick="newProDate()">Start Pro Challenge</button>
 
@@ -215,6 +228,11 @@ always land on the same weekday in the same year.</p>
 <div class="stepbox">
 <p><strong>04/04 · 06/06 · 08/08 · 10/10 · 12/12</strong><br>
 same pattern. Same system.</p>
+</div>
+
+<div class="stepbox">
+<p><strong>Every 400 years, weekdays repeat.</strong><br>
+June 6, 744 has the same weekday as June 6, 1944.</p>
 </div>
 
 <button class="bookbutton" onclick="alert('Amazon ebook link comes here.')">
@@ -262,18 +280,42 @@ B-Day Method · Pierre Renschler
 let currentTrainingDate = null;
 let currentProDate = null;
 
+let score = 0;
+let streak = 0;
+let anchorSolved = false;
+let yearStepSolved = false;
+
+const START_YEAR = 1700;
+const END_YEAR = 2099;
+
+function randomDateBetween(startYear, endYear) {
+    let start = new Date(startYear,0,1);
+    let end = new Date(endYear,11,31);
+    return new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
+}
+
+function updateScore() {
+    document.getElementById("score").innerText = score;
+    document.getElementById("streak").innerText = streak;
+}
+
 function getWeekday() {
     let date = new Date(document.getElementById("dateInput").value);
     if (!date.getTime()) return;
+
+    let year = date.getFullYear();
+
+    if (year < START_YEAR || year > END_YEAR) {
+        document.getElementById("result").innerText = "Use a date from 1700 to 2099.";
+        return;
+    }
 
     let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     document.getElementById("result").innerText = days[date.getDay()];
 }
 
 function randomDate() {
-    let start = new Date(1900,0,1);
-    let end = new Date(2100,11,31);
-    let random = new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
+    let random = randomDateBetween(START_YEAR, END_YEAR);
 
     document.getElementById("dateInput").value = random.toISOString().split("T")[0];
     getWeekday();
@@ -305,11 +347,11 @@ function showTab(tabId) {
 }
 
 function newTrainingDate() {
-    let start = new Date(1900,0,1);
-    let end = new Date(2099,11,31);
-    let random = new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
+    let random = randomDateBetween(START_YEAR, END_YEAR);
 
     currentTrainingDate = random;
+    anchorSolved = false;
+    yearStepSolved = false;
 
     document.getElementById("trainingDate").innerText = formatDate(random);
     document.getElementById("trainingFeedback").innerText = "";
@@ -337,8 +379,7 @@ function getCenturyAnchor(year) {
 
 function getYearStep(year) {
     let y = year % 100;
-    let step = (y + Math.floor(y / 4)) % 7;
-    return step;
+    return (y + Math.floor(y / 4)) % 7;
 }
 
 function anchorName(anchor) {
@@ -348,9 +389,25 @@ function anchorName(anchor) {
     if (anchor === 2) return "Tuesday · 2";
 }
 
+function correctPoint() {
+    score += 1;
+    streak += 1;
+    updateScore();
+}
+
+function wrongPoint() {
+    streak = 0;
+    updateScore();
+}
+
 function checkAnchor(choice) {
     if (!currentTrainingDate) {
         document.getElementById("trainingFeedback").innerText = "Start with a random date first.";
+        return;
+    }
+
+    if (anchorSolved) {
+        document.getElementById("trainingFeedback").innerText = "Anchor already solved. Continue with Step 2.";
         return;
     }
 
@@ -358,10 +415,16 @@ function checkAnchor(choice) {
     let correct = getCenturyAnchor(year);
 
     if (choice === correct) {
+        anchorSolved = true;
+        correctPoint();
+
         document.getElementById("trainingFeedback").innerText =
             "Correct. You found the B-Day anchor. And this will always work.";
+
         document.getElementById("yearStepBox").style.display = "block";
     } else {
+        wrongPoint();
+
         document.getElementById("trainingFeedback").innerText =
             "Not yet. The B-Day anchor is: " + anchorName(correct);
     }
@@ -373,22 +436,35 @@ function checkYearStep(choice) {
         return;
     }
 
+    if (!anchorSolved) {
+        document.getElementById("yearFeedback").innerText = "Find the B-Day anchor first.";
+        return;
+    }
+
+    if (yearStepSolved) {
+        document.getElementById("yearFeedback").innerText = "Year step already solved. Start a new date.";
+        return;
+    }
+
     let year = currentTrainingDate.getFullYear();
     let correct = getYearStep(year);
 
     if (choice === correct) {
+        yearStepSolved = true;
+        correctPoint();
+
         document.getElementById("yearFeedback").innerText =
             "Correct. Now you are seeing the pattern.";
     } else {
+        wrongPoint();
+
         document.getElementById("yearFeedback").innerText =
             "Not yet. The year step is: " + correct;
     }
 }
 
 function newProDate() {
-    let start = new Date(1600,0,1);
-    let end = new Date(2199,11,31);
-    let random = new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
+    let random = randomDateBetween(START_YEAR, END_YEAR);
 
     currentProDate = random;
     document.getElementById("proDate").innerText = formatDate(random);
