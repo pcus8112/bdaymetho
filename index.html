@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Find the weekday of any date</title>
+<title>B-Day Method · Find the weekday of any date</title>
 
 <style>
 body {
@@ -78,16 +78,33 @@ button {
     background: #b58900;
     color: white;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .secondary {
     background: #666;
 }
 
+.choice {
+    background: #333;
+}
+
 .result {
     font-size: 28px;
     margin-top: 20px;
     font-weight: bold;
+    color: #f4b400;
+}
+
+.small {
+    opacity: 0.85;
+    line-height: 1.5;
+}
+
+.feedback {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 18px;
     color: #f4b400;
 }
 </style>
@@ -104,7 +121,6 @@ of any date
 
 <div class="line"></div>
 
-<!-- TABS -->
 <div class="tabs">
     <div class="tab active" onclick="showTab('basic')">Basic</div>
     <div class="tab" onclick="showTab('advanced')">Advanced</div>
@@ -112,9 +128,7 @@ of any date
     <div class="tab" onclick="showTab('method')">The Method</div>
 </div>
 
-<!-- BASIC -->
 <div class="card" id="basic">
-
 <h2>Basic Calculations</h2>
 <p>Enter any date. Get the weekday instantly.</p>
 
@@ -124,28 +138,40 @@ of any date
 <button class="secondary" onclick="randomDate()">Random date</button>
 
 <div class="result" id="result"></div>
-
 </div>
 
-<!-- ADVANCED -->
 <div class="card" id="advanced" style="display:none;">
-<h2>Advanced</h2>
-<p>Coming soon.</p>
+<h2>Advanced Training</h2>
+<p class="small">Find the century anchor first.</p>
+
+<div class="result" id="trainingDate">Press start.</div>
+
+<button onclick="newTrainingDate()">Start / New date</button>
+
+<p class="small">What is the century anchor?</p>
+
+<button class="choice" onclick="checkAnchor(7)">Sunday · 7</button>
+<button class="choice" onclick="checkAnchor(5)">Friday · 5</button>
+<button class="choice" onclick="checkAnchor(3)">Wednesday · 3</button>
+<button class="choice" onclick="checkAnchor(2)">Tuesday · 2</button>
+
+<div class="feedback" id="trainingFeedback"></div>
 </div>
 
-<!-- PRO -->
 <div class="card" id="pro" style="display:none;">
-<h2>Pro</h2>
-<p>Challenge mode coming soon.</p>
+<h2>Pro Calculations</h2>
+<p class="small">Older dates. Harder challenges. Same pattern.</p>
+<button onclick="alert('Pro mode comes next.')">Start Pro Challenge</button>
 </div>
 
-<!-- METHOD -->
 <div class="card" id="method" style="display:none;">
 <h2>The Method</h2>
-<p>This is where you will learn the pattern behind all dates.</p>
+<p class="small">
+The book shows how to stop guessing and start seeing the pattern.
+</p>
+<button onclick="alert('Amazon ebook link comes here.')">See the pattern</button>
 </div>
 
-<!-- HOOK -->
 <div style="margin-top:40px; text-align:left;">
 
 <h2 style="font-size:22px;">
@@ -172,7 +198,7 @@ Not seeing.
 
 <div style="margin-top:30px;">
 
-<button onclick="window.location.href='#'" 
+<button onclick="showTab('method')" 
 style="background:#f4b400; color:black; font-size:18px;">
 See the pattern
 </button>
@@ -186,6 +212,8 @@ B-Day Method · Pierre Renschler
 </div>
 
 <script>
+let currentTrainingDate = null;
+
 function getWeekday() {
     let date = new Date(document.getElementById("dateInput").value);
     if (!date.getTime()) return;
@@ -200,6 +228,7 @@ function randomDate() {
     let random = new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
 
     document.getElementById("dateInput").value = random.toISOString().split("T")[0];
+    getWeekday();
 }
 
 function showTab(tabId) {
@@ -212,7 +241,75 @@ function showTab(tabId) {
     document.getElementById(tabId).style.display = 'block';
 
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+
+    let labels = {
+        basic: 'Basic',
+        advanced: 'Advanced',
+        pro: 'Pro',
+        method: 'The Method'
+    };
+
+    document.querySelectorAll('.tab').forEach(t => {
+        if (t.innerText === labels[tabId]) {
+            t.classList.add('active');
+        }
+    });
+}
+
+function newTrainingDate() {
+    let start = new Date(1900,0,1);
+    let end = new Date(2099,11,31);
+    let random = new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
+
+    currentTrainingDate = random;
+
+    document.getElementById("trainingDate").innerText =
+        formatDate(random);
+
+    document.getElementById("trainingFeedback").innerText = "";
+}
+
+function formatDate(date) {
+    let months = [
+        "January","February","March","April","May","June",
+        "July","August","September","October","November","December"
+    ];
+
+    return months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+}
+
+function getCenturyAnchor(year) {
+    let century = Math.floor(year / 100) % 4;
+
+    if (century === 0) return 2;
+    if (century === 1) return 7;
+    if (century === 2) return 5;
+    if (century === 3) return 3;
+}
+
+function anchorName(anchor) {
+    if (anchor === 7) return "Sunday · 7";
+    if (anchor === 5) return "Friday · 5";
+    if (anchor === 3) return "Wednesday · 3";
+    if (anchor === 2) return "Tuesday · 2";
+}
+
+function checkAnchor(choice) {
+    if (!currentTrainingDate) {
+        document.getElementById("trainingFeedback").innerText = "Start with a random date first.";
+        return;
+    }
+
+    let year = currentTrainingDate.getFullYear();
+    let correct = getCenturyAnchor(year);
+
+    if (choice === correct) {
+        document.getElementById("trainingFeedback").innerText =
+            "Correct. You found the anchor.";
+    } else {
+        document.getElementById("trainingFeedback").innerText =
+            "Not yet. The anchor is: " + anchorName(correct);
+    }
 }
 </script>
 
