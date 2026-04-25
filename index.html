@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -107,6 +108,19 @@ button {
     margin-top: 18px;
     color: #f4b400;
 }
+
+.stepbox {
+    background: #111;
+    border-radius: 16px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.bookbutton {
+    background:#f4b400;
+    color:black;
+    font-size:18px;
+}
 </style>
 </head>
 
@@ -141,14 +155,15 @@ of any date
 </div>
 
 <div class="card" id="advanced" style="display:none;">
-<h2>Advanced Training</h2>
-<p class="small">Find the century anchor first.</p>
+<h2>B-Day Training</h2>
+<p class="small">Find the B-Day anchor first. Then find the year step.</p>
 
 <div class="result" id="trainingDate">Press start.</div>
 
 <button onclick="newTrainingDate()">Start / New date</button>
 
-<p class="small">What is the century anchor?</p>
+<div class="stepbox">
+<p class="small">Step 1: What is the B-Day anchor?</p>
 
 <button class="choice" onclick="checkAnchor(7)">Sunday · 7</button>
 <button class="choice" onclick="checkAnchor(5)">Friday · 5</button>
@@ -158,18 +173,53 @@ of any date
 <div class="feedback" id="trainingFeedback"></div>
 </div>
 
+<div class="stepbox" id="yearStepBox" style="display:none;">
+<p class="small">Step 2: What is the year step?</p>
+
+<button class="choice" onclick="checkYearStep(0)">0</button>
+<button class="choice" onclick="checkYearStep(1)">1</button>
+<button class="choice" onclick="checkYearStep(2)">2</button>
+<button class="choice" onclick="checkYearStep(3)">3</button>
+<button class="choice" onclick="checkYearStep(4)">4</button>
+<button class="choice" onclick="checkYearStep(5)">5</button>
+<button class="choice" onclick="checkYearStep(6)">6</button>
+
+<div class="feedback" id="yearFeedback"></div>
+</div>
+</div>
+
 <div class="card" id="pro" style="display:none;">
 <h2>Pro Calculations</h2>
-<p class="small">Older dates. Harder challenges. Same pattern.</p>
-<button onclick="alert('Pro mode comes next.')">Start Pro Challenge</button>
+<p class="small">Older dates. Harder challenges. Same B-Day Method.</p>
+
+<button onclick="newProDate()">Start Pro Challenge</button>
+
+<div class="result" id="proDate">Press start.</div>
+<div class="feedback" id="proFeedback"></div>
+
+<button class="secondary" onclick="showProAnswer()">Show weekday</button>
 </div>
 
 <div class="card" id="method" style="display:none;">
-<h2>The Method</h2>
+<h2>The B-Day Method</h2>
+
 <p class="small">
-The book shows how to stop guessing and start seeing the pattern.
+The B-Day Method shows you how to stop guessing and start seeing the pattern.
 </p>
-<button onclick="alert('Amazon ebook link comes here.')">See the pattern</button>
+
+<div class="stepbox">
+<p><strong>July 4 and October 31</strong><br>
+always land on the same weekday in the same year.</p>
+</div>
+
+<div class="stepbox">
+<p><strong>04/04 · 06/06 · 08/08 · 10/10 · 12/12</strong><br>
+same pattern. Same system.</p>
+</div>
+
+<button class="bookbutton" onclick="alert('Amazon ebook link comes here.')">
+Learn this in 30 minutes
+</button>
 </div>
 
 <div style="margin-top:40px; text-align:left;">
@@ -197,12 +247,9 @@ Not seeing.
 </div>
 
 <div style="margin-top:30px;">
-
-<button onclick="showTab('method')" 
-style="background:#f4b400; color:black; font-size:18px;">
-See the pattern
+<button onclick="showTab('method')" class="bookbutton">
+Learn this in 30 minutes
 </button>
-
 </div>
 
 <p style="margin-top:30px; opacity:0.7;">
@@ -213,6 +260,7 @@ B-Day Method · Pierre Renschler
 
 <script>
 let currentTrainingDate = null;
+let currentProDate = null;
 
 function getWeekday() {
     let date = new Date(document.getElementById("dateInput").value);
@@ -263,10 +311,10 @@ function newTrainingDate() {
 
     currentTrainingDate = random;
 
-    document.getElementById("trainingDate").innerText =
-        formatDate(random);
-
+    document.getElementById("trainingDate").innerText = formatDate(random);
     document.getElementById("trainingFeedback").innerText = "";
+    document.getElementById("yearFeedback").innerText = "";
+    document.getElementById("yearStepBox").style.display = "none";
 }
 
 function formatDate(date) {
@@ -287,6 +335,12 @@ function getCenturyAnchor(year) {
     if (century === 3) return 3;
 }
 
+function getYearStep(year) {
+    let y = year % 100;
+    let step = (y + Math.floor(y / 4)) % 7;
+    return step;
+}
+
 function anchorName(anchor) {
     if (anchor === 7) return "Sunday · 7";
     if (anchor === 5) return "Friday · 5";
@@ -305,11 +359,51 @@ function checkAnchor(choice) {
 
     if (choice === correct) {
         document.getElementById("trainingFeedback").innerText =
-            "Correct. You found the anchor.";
+            "Correct. You found the B-Day anchor. And this will always work.";
+        document.getElementById("yearStepBox").style.display = "block";
     } else {
         document.getElementById("trainingFeedback").innerText =
-            "Not yet. The anchor is: " + anchorName(correct);
+            "Not yet. The B-Day anchor is: " + anchorName(correct);
     }
+}
+
+function checkYearStep(choice) {
+    if (!currentTrainingDate) {
+        document.getElementById("yearFeedback").innerText = "Start with a random date first.";
+        return;
+    }
+
+    let year = currentTrainingDate.getFullYear();
+    let correct = getYearStep(year);
+
+    if (choice === correct) {
+        document.getElementById("yearFeedback").innerText =
+            "Correct. Now you are seeing the pattern.";
+    } else {
+        document.getElementById("yearFeedback").innerText =
+            "Not yet. The year step is: " + correct;
+    }
+}
+
+function newProDate() {
+    let start = new Date(1600,0,1);
+    let end = new Date(2199,11,31);
+    let random = new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
+
+    currentProDate = random;
+    document.getElementById("proDate").innerText = formatDate(random);
+    document.getElementById("proFeedback").innerText = "Guess first. Then reveal.";
+}
+
+function showProAnswer() {
+    if (!currentProDate) {
+        document.getElementById("proFeedback").innerText = "Start with a Pro date first.";
+        return;
+    }
+
+    let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    document.getElementById("proFeedback").innerText =
+        days[currentProDate.getDay()];
 }
 </script>
 
