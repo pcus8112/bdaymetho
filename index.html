@@ -50,6 +50,7 @@ h1 {
     background: #555;
     color: white;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .active {
@@ -61,6 +62,7 @@ h1 {
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    margin-bottom: 20px;
 }
 
 input, button {
@@ -102,14 +104,16 @@ of any date
 
 <div class="line"></div>
 
+<!-- TABS -->
 <div class="tabs">
-    <div class="tab active">Basic</div>
-    <div class="tab">Advanced</div>
-    <div class="tab">Pro</div>
-    <div class="tab">The Method</div>
+    <div class="tab active" onclick="showTab('basic')">Basic</div>
+    <div class="tab" onclick="showTab('advanced')">Advanced</div>
+    <div class="tab" onclick="showTab('pro')">Pro</div>
+    <div class="tab" onclick="showTab('method')">The Method</div>
 </div>
 
-<div class="card">
+<!-- BASIC -->
+<div class="card" id="basic">
 
 <h2>Basic Calculations</h2>
 <p>Enter any date. Get the weekday instantly.</p>
@@ -123,8 +127,25 @@ of any date
 
 </div>
 
-<!-- 🔥 HOOK BLOCK -->
+<!-- ADVANCED -->
+<div class="card" id="advanced" style="display:none;">
+<h2>Advanced</h2>
+<p>Coming soon.</p>
+</div>
 
+<!-- PRO -->
+<div class="card" id="pro" style="display:none;">
+<h2>Pro</h2>
+<p>Challenge mode coming soon.</p>
+</div>
+
+<!-- METHOD -->
+<div class="card" id="method" style="display:none;">
+<h2>The Method</h2>
+<p>This is where you will learn the pattern behind all dates.</p>
+</div>
+
+<!-- HOOK -->
 <div style="margin-top:40px; text-align:left;">
 
 <h2 style="font-size:22px;">
@@ -179,6 +200,19 @@ function randomDate() {
     let random = new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
 
     document.getElementById("dateInput").value = random.toISOString().split("T")[0];
+}
+
+function showTab(tabId) {
+    let tabs = ['basic','advanced','pro','method'];
+
+    tabs.forEach(id => {
+        document.getElementById(id).style.display = 'none';
+    });
+
+    document.getElementById(tabId).style.display = 'block';
+
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
 }
 </script>
 
