@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>B-Day Method · Find the weekday of any date</title>
+<meta name="description" content="Use the B-Day Method to find the weekday of any date. Train with random dates, learn calendar patterns, and practice mental date calculation.">
+<meta name="keywords" content="B-Day Method, weekday calculator, find weekday of any date, calendar trick, mental math, Doomsday rule, John Horton Conway">
+<meta name="author" content="Pierre C. Renschler">
 
 <style>
 body {
@@ -130,6 +133,22 @@ button {
     color:black;
     font-size:18px;
 }
+
+a {
+    color: #f4b400;
+}
+
+.legal-links {
+    margin-top: 25px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.legal-links span {
+    cursor: pointer;
+    text-decoration: underline;
+    margin: 0 6px;
+}
 </style>
 </head>
 
@@ -153,7 +172,7 @@ of any date
 
 <div class="card" id="basic">
 <h2>Basic Calculations</h2>
-<p>Enter any date from 1700 to 2099. Get the weekday instantly.</p>
+<p>Random training uses the current year. Enter any date from 1700 to 2099.</p>
 
 <input type="date" id="dateInput" min="1700-01-01" max="2099-12-31">
 
@@ -217,7 +236,8 @@ Score: <span id="score">0</span> · Streak: <span id="streak">0</span>
 <h2>The B-Day Method</h2>
 
 <p class="small">
-The B-Day Method shows you how to stop guessing and start seeing the pattern.
+The B-Day Method is a simple training approach for seeing calendar patterns and finding weekdays mentally.
+It is inspired by the classic Doomsday rule developed by John Horton Conway.
 </p>
 
 <div class="stepbox">
@@ -235,9 +255,69 @@ same pattern. Same system.</p>
 June 6, 744 has the same weekday as June 6, 1944.</p>
 </div>
 
-<button class="bookbutton" onclick="alert('Amazon ebook link comes here.')">
+<p class="small">
+Background:
+<a href="https://en.wikipedia.org/wiki/Doomsday_rule" target="_blank" rel="noopener noreferrer">Doomsday rule</a> ·
+<a href="https://en.wikipedia.org/wiki/John_Horton_Conway" target="_blank" rel="noopener noreferrer">John Horton Conway</a>
+</p>
+
+<button class="bookbutton" onclick="alert('Amazon book link will be added after publication.')">
 Learn this in 30 minutes
 </button>
+</div>
+
+<div class="card" id="contact" style="display:none;">
+<h2>Contact</h2>
+<p class="small">
+For questions about the B-Day Method, please contact:
+</p>
+<p><strong>Pierre C. Renschler</strong></p>
+<p><a href="mailto:pc.renschler@gmail.com">pc.renschler@gmail.com</a></p>
+</div>
+
+<div class="card" id="impressum" style="display:none;">
+<h2>Impressum</h2>
+<p class="small">
+Information according to applicable European legal disclosure standards.
+</p>
+
+<p>
+<strong>Pierre C. Renschler</strong><br>
+87 Impasse de la Petite Trémaillère<br>
+F-71500 Saint-Usuge<br>
+France
+</p>
+
+<p>
+E-Mail:<br>
+<a href="mailto:pc.renschler@gmail.com">pc.renschler@gmail.com</a>
+</p>
+
+<p class="small">
+Responsible for the content of this website: Pierre C. Renschler.
+</p>
+</div>
+
+<div class="card" id="privacy" style="display:none;">
+<h2>Privacy Policy</h2>
+
+<p class="small">
+This website does not use cookies, tracking tools, Google Analytics, advertising trackers, newsletters, contact forms, or user accounts.
+</p>
+
+<p class="small">
+If you contact the website owner by e-mail, your message and e-mail address will be used only to answer your request.
+</p>
+
+<p class="small">
+External links may lead to third-party websites. Their own privacy policies apply there.
+</p>
+
+<p>
+<strong>Contact:</strong><br>
+Pierre C. Renschler<br>
+<a href="mailto:pc.renschler@gmail.com">pc.renschler@gmail.com</a>
+</p>
 </div>
 
 <div style="margin-top:40px; text-align:left;">
@@ -271,8 +351,14 @@ Learn this in 30 minutes
 </div>
 
 <p style="margin-top:30px; opacity:0.7;">
-B-Day Method · Pierre Renschler
+B-Day Method · Pierre C. Renschler
 </p>
+
+<div class="legal-links">
+<span onclick="showTab('contact')">Contact</span> ·
+<span onclick="showTab('impressum')">Impressum</span> ·
+<span onclick="showTab('privacy')">Privacy Policy</span>
+</div>
 
 </div>
 
@@ -294,14 +380,24 @@ function randomDateBetween(startYear, endYear) {
     return new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
 }
 
+function formatDateInput(date) {
+    let y = date.getFullYear();
+    let m = String(date.getMonth() + 1).padStart(2, "0");
+    let d = String(date.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + d;
+}
+
 function updateScore() {
     document.getElementById("score").innerText = score;
     document.getElementById("streak").innerText = streak;
 }
 
 function getWeekday() {
-    let date = new Date(document.getElementById("dateInput").value);
-    if (!date.getTime()) return;
+    let input = document.getElementById("dateInput").value;
+    if (!input) return;
+
+    let parts = input.split("-");
+    let date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
 
     let year = date.getFullYear();
 
@@ -315,14 +411,20 @@ function getWeekday() {
 }
 
 function randomDate() {
-    let random = randomDateBetween(START_YEAR, END_YEAR);
+    let currentYear = new Date().getFullYear();
 
-    document.getElementById("dateInput").value = random.toISOString().split("T")[0];
+    if (currentYear < START_YEAR || currentYear > END_YEAR) {
+        currentYear = 2026;
+    }
+
+    let random = randomDateBetween(currentYear, currentYear);
+
+    document.getElementById("dateInput").value = formatDateInput(random);
     getWeekday();
 }
 
 function showTab(tabId) {
-    let tabs = ['basic','advanced','pro','method'];
+    let tabs = ['basic','advanced','pro','method','contact','impressum','privacy'];
 
     tabs.forEach(id => {
         document.getElementById(id).style.display = 'none';
@@ -344,6 +446,8 @@ function showTab(tabId) {
             t.classList.add('active');
         }
     });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function newTrainingDate() {
