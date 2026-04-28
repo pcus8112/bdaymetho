@@ -19,9 +19,24 @@ body {
 }
 
 .container {
-    max-width: 500px;
+    max-width: 900px;
     margin: auto;
     padding: 20px;
+}
+
+.logo-wrap {
+    display: inline-block;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    background: rgba(3, 20, 52, 0.55);
+    border-radius: 20px;
+    box-shadow: 0 0 24px rgba(0,0,0,0.28);
+}
+
+.logo-wrap img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
 h1 {
@@ -40,11 +55,35 @@ h1 {
     margin: 20px 0;
 }
 
-.tabs {
+.home-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 18px;
+    align-items: start;
+}
+
+@media (max-width: 760px) {
+    .home-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.section-title {
+    margin-top: 0;
+    margin-bottom: 14px;
+    color: #f4b400;
+}
+
+.training-button-card {
+    padding: 14px;
+}
+
+.training-button-card button {
+    font-size: 18px;
+}
+
+.tabs {
+    display: none;
 }
 
 .tab {
@@ -75,6 +114,7 @@ input, button {
     border-radius: 12px;
     border: none;
     font-size: 16px;
+    box-sizing: border-box;
 }
 
 button {
@@ -149,6 +189,18 @@ a {
     text-decoration: underline;
     margin: 0 6px;
 }
+
+.month-block {
+    margin-top: 12px;
+    padding: 12px;
+    background: #111;
+    border-radius: 14px;
+    text-align: left;
+}
+
+.month-block strong {
+    color: #f4b400;
+}
 </style>
 </head>
 
@@ -156,12 +208,68 @@ a {
 
 <div class="container">
 
+<div class="logo-wrap">
+    <img src="logo.png" alt="bdaymetho.de">
+</div>
+
 <h1>
 Find the <span class="highlight">weekday</span><br>
 of any date
 </h1>
 
+<p style="opacity:0.85; margin-top:10px; margin-bottom:20px;">
+Pierre C. Renschler
+</p>
+
 <div class="line"></div>
+
+<div id="home">
+
+<div class="home-grid">
+
+<div>
+<h2 class="section-title">Did you know?</h2>
+
+<div class="card">
+<h3>Your Birth-Weekday – a special Day</h3>
+<p class="small">Enter your date and discover famous events that happened on the same weekday.</p>
+<input type="date" id="birthInput">
+<button onclick="showBirthWeekday()">Show my weekday</button>
+<div class="result" id="birthResult"></div>
+<div class="small" id="birthEvents"></div>
+</div>
+
+<div class="card">
+<h3>Shared Birth-Weekdays</h3>
+<p class="small">Enter a date. See all dates in the current year that share the same weekday.</p>
+<input type="date" id="sharedInput">
+<button onclick="showSharedDates()">Find matches</button>
+<div class="small" id="sharedResult"></div>
+</div>
+
+<div class="card training-button-card">
+<button onclick="showTab('method')">The Method</button>
+</div>
+</div>
+
+<div>
+<h2 class="section-title">Training</h2>
+
+<div class="card training-button-card">
+<button onclick="showTab('basic')">Basic</button>
+</div>
+
+<div class="card training-button-card">
+<button onclick="showTab('advanced')">Advanced</button>
+</div>
+
+<div class="card training-button-card">
+<button onclick="showTab('pro')">Pro</button>
+</div>
+</div>
+
+</div>
+</div>
 
 <div class="tabs">
     <div class="tab active" onclick="showTab('basic')">Basic</div>
@@ -170,7 +278,7 @@ of any date
     <div class="tab" onclick="showTab('method')">The Method</div>
 </div>
 
-<div class="card" id="basic">
+<div class="card" id="basic" style="display:none;">
 <h2>Basic Calculations</h2>
 <p>Random training uses the current year. Enter any date from 1700 to 2099.</p>
 
@@ -351,7 +459,7 @@ Learn this in 30 minutes
 </div>
 
 <p style="margin-top:30px; opacity:0.7;">
-B-Day Method · Pierre C. Renschler
+Pierre C. Renschler
 </p>
 
 <div class="legal-links">
@@ -373,6 +481,72 @@ let yearStepSolved = false;
 
 const START_YEAR = 1700;
 const END_YEAR = 2099;
+
+const weekdayEvents = {
+    Sunday: [
+        "Dec 7, 1941 — Pearl Harbor attack",
+        "Jun 18, 1815 — Battle of Waterloo",
+        "Feb 11, 1990 — Nelson Mandela released",
+        "Aug 13, 1961 — Berlin Wall construction begins",
+        "Jul 20, 1969 — Apollo 11 Moon landing",
+        "Jun 16, 1963 — First woman in space",
+        "Oct 1, 1347 — Black Death reaches Europe"
+    ],
+    Monday: [
+        "Jul 21, 1969 — First human steps on the Moon",
+        "Aug 6, 1945 — Hiroshima bombing",
+        "Apr 15, 1912 — Titanic sinks",
+        "Apr 6, 1896 — First modern Olympic Games open",
+        "Oct 19, 1987 — Black Monday stock market crash",
+        "Oct 22, 1962 — Cuban Missile Crisis TV address",
+        "Nov 11, 1918 — World War I armistice"
+    ],
+    Tuesday: [
+        "Jun 6, 1944 — D-Day landings",
+        "Sep 11, 2001 — 9/11 attacks",
+        "Jul 28, 1914 — World War I begins",
+        "May 8, 1945 — V-E Day",
+        "Jul 14, 1789 — Storming of the Bastille",
+        "Jun 26, 1945 — United Nations Charter signed",
+        "Jan 9, 2007 — First iPhone announced"
+    ],
+    Wednesday: [
+        "Aug 1, 1798 — Battle of the Nile",
+        "Oct 12, 1492 — Columbus reaches the Americas",
+        "Oct 24, 1945 — United Nations founded",
+        "Apr 12, 1961 — First human in space",
+        "Mar 11, 2020 — WHO declares COVID-19 a pandemic",
+        "Oct 3, 1990 — German reunification",
+        "Jul 16, 1969 — Apollo 11 launches"
+    ],
+    Thursday: [
+        "Jul 4, 1776 — U.S. Declaration of Independence",
+        "Nov 9, 1989 — Fall of the Berlin Wall",
+        "Dec 17, 1903 — Wright brothers’ first flight",
+        "Apr 4, 1968 — Martin Luther King Jr. assassinated",
+        "Apr 12, 1945 — Franklin D. Roosevelt dies",
+        "Jan 1, 1863 — Emancipation Proclamation takes effect",
+        "Jun 23, 2016 — Brexit referendum"
+    ],
+    Friday: [
+        "Nov 22, 1963 — John F. Kennedy assassinated",
+        "Sep 1, 1939 — Germany invades Poland",
+        "Oct 4, 1957 — Sputnik 1 launches",
+        "Aug 9, 1974 — Richard Nixon resigns",
+        "Dec 21, 2012 — End of the Maya Long Count cycle",
+        "May 10, 1940 — Germany invades France, Belgium, Netherlands, Luxembourg",
+        "Nov 9, 1918 — German Kaiser abdicates"
+    ],
+    Saturday: [
+        "Apr 26, 1986 — Chernobyl disaster",
+        "Jun 28, 1919 — Treaty of Versailles signed",
+        "Apr 15, 1865 — Abraham Lincoln dies",
+        "May 5, 1821 — Napoleon dies",
+        "Sep 14, 1901 — William McKinley dies",
+        "Aug 22, 1485 — Richard III dies at Bosworth",
+        "Jun 17, 1972 — Watergate break-in"
+    ]
+};
 
 function randomDateBetween(startYear, endYear) {
     let start = new Date(startYear,0,1);
@@ -424,7 +598,7 @@ function randomDate() {
 }
 
 function showTab(tabId) {
-    let tabs = ['basic','advanced','pro','method','contact','impressum','privacy'];
+    let tabs = ['home','basic','advanced','pro','method','contact','impressum','privacy'];
 
     tabs.forEach(id => {
         document.getElementById(id).style.display = 'none';
@@ -448,6 +622,77 @@ function showTab(tabId) {
     });
 
     window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showBirthWeekday() {
+    let input = document.getElementById("birthInput").value;
+    if (!input) return;
+
+    let parts = input.split("-");
+    let date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    let weekday = days[date.getDay()];
+
+    document.getElementById("birthResult").innerText = weekday;
+
+    let events = weekdayEvents[weekday].map(event => "• " + event).join("<br>");
+    document.getElementById("birthEvents").innerHTML =
+        "<br><strong>7 famous events on a " + weekday + ":</strong><br>" + events;
+}
+
+function showSharedDates() {
+    let input = document.getElementById("sharedInput").value;
+    if (!input) return;
+
+    let parts = input.split("-");
+    let inputMonth = Number(parts[1]) - 1;
+    let inputDay = Number(parts[2]);
+    let year = new Date().getFullYear();
+
+    if (inputMonth === 1 && inputDay === 29) {
+        let isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        if (!isLeap) {
+            document.getElementById("sharedResult").innerText =
+                "This date doesn’t exist this year.";
+            return;
+        }
+    }
+
+    let selectedDate = new Date(year, inputMonth, inputDay);
+
+    if (selectedDate.getMonth() !== inputMonth || selectedDate.getDate() !== inputDay) {
+        document.getElementById("sharedResult").innerText =
+            "This date doesn’t exist this year.";
+        return;
+    }
+
+    let targetDay = selectedDate.getDay();
+    let monthNames = [
+        "January","February","March","April","May","June",
+        "July","August","September","October","November","December"
+    ];
+
+    let grouped = {};
+
+    for (let m = 0; m < 12; m++) {
+        grouped[m] = [];
+        for (let d = 1; d <= 31; d++) {
+            let test = new Date(year, m, d);
+            if (test.getMonth() === m && test.getDay() === targetDay) {
+                grouped[m].push(d);
+            }
+        }
+    }
+
+    let output = "<br><strong>Same weekday in " + year + ":</strong>";
+
+    for (let m = 0; m < 12; m++) {
+        if (grouped[m].length > 0) {
+            output += "<div class='month-block'><strong>" + monthNames[m] + "</strong><br>" + grouped[m].join(" · ") + "</div>";
+        }
+    }
+
+    document.getElementById("sharedResult").innerHTML = output;
 }
 
 function newTrainingDate() {
