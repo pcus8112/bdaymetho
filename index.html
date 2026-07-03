@@ -709,10 +709,10 @@ return months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear(
 
 function getCenturyAnchor(year) {
 let century = Math.floor(year / 100) % 4;
-if (century === 0) return 2;
-if (century === 1) return 7;
-if (century === 2) return 5;
-if (century === 3) return 3;
+if (century === 0) return 3;
+if (century === 1) return 1;
+if (century === 2) return 6;
+if (century === 3) return 4;
 }
 
 function getYearStep(year) {
@@ -721,10 +721,10 @@ return (y + Math.floor(y / 4)) % 7;
 }
 
 function anchorName(anchor) {
-if (anchor === 7) return "Sunday · 7";
-if (anchor === 5) return "Friday · 5";
-if (anchor === 3) return "Wednesday · 3";
-if (anchor === 2) return "Tuesday · 2";
+if (anchor === 1) return "Sunday · 1";
+if (anchor === 6) return "Friday · 6";
+if (anchor === 4) return "Wednesday · 4";
+if (anchor === 3) return "Tuesday · 3";
 }
 
 function correctPoint() {
