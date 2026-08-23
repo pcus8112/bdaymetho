@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 100" role="img" aria-labelledby="title">
+  <title id="title">Flag of the United States</title>
+  <defs>
+    <path id="star" d="M0-2.1l.49 1.43h1.5L.78.21l.46 1.43L0 .76l-1.24.88.46-1.43-1.21-.88h1.5z" fill="#fff"/>
+    <g id="six"><use href="#star" x="6.33"/><use href="#star" x="19"/><use href="#star" x="31.67"/><use href="#star" x="44.33"/><use href="#star" x="57"/><use href="#star" x="69.67"/></g>
+    <g id="five"><use href="#star" x="12.67"/><use href="#star" x="25.33"/><use href="#star" x="38"/><use href="#star" x="50.67"/><use href="#star" x="63.33"/></g>
+  </defs>
+  <path fill="#fff" d="M0 0h190v100H0z"/>
+  <g fill="#b22234">
+    <path d="M0 0h190v7.692H0zM0 15.385h190v7.692H0zM0 30.769h190v7.692H0zM0 46.154h190v7.692H0zM0 61.538h190v7.692H0zM0 76.923h190v7.692H0zM0 92.308h190V100H0z"/>
+  </g>
+  <path fill="#3c3b6e" d="M0 0h76v53.846H0z"/>
+  <g>
+    <use href="#six" y="5.38"/><use href="#five" y="10.77"/><use href="#six" y="16.15"/><use href="#five" y="21.54"/><use href="#six" y="26.92"/><use href="#five" y="32.31"/><use href="#six" y="37.69"/><use href="#five" y="43.08"/><use href="#six" y="48.46"/>
+  </g>
+</svg>
