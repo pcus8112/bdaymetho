@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bday method · Find the weekday of any date</title>
+<meta name="description" content="Use the bday method to find the weekday of any date. Train with random dates, learn calendar patterns, and practice mental date calculation.">
+<meta name="keywords" content="bday method, weekday calculator, find weekday of any date, calendar trick, mental math, Doomsday rule, John Horton Conway">
+<meta name="author" content="Pierre C. Renschler">
+<link rel="alternate" hreflang="en" href="en.html">
+<link rel="alternate" hreflang="de" href="de.html">
+<link rel="alternate" hreflang="fr-CA" href="fr-ca.html">
+<link rel="alternate" hreflang="x-default" href="index.html">
+
+<style>
+body {
+margin: 0;
+font-family: Arial, sans-serif;
+background: linear-gradient(#0b4da2, #083a7a);
+color: white;
+text-align: center;
+}
+
+.container {
+max-width: 900px;
+margin: auto;
+padding: 20px;
+}
+
+.language-switcher {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+margin-bottom: 16px;
+}
+
+.language-switcher a {
+display: inline-flex;
+align-items: center;
+gap: 7px;
+padding: 7px 10px;
+border: 2px solid transparent;
+border-radius: 12px;
+color: white;
+text-decoration: none;
+font-size: 14px;
+font-weight: bold;
+background: rgba(3, 20, 52, 0.55);
+}
+
+.language-switcher a[aria-current="page"] {
+border-color: #f4b400;
+}
+
+.language-switcher img {
+width: 32px;
+height: 21px;
+object-fit: cover;
+border-radius: 3px;
+box-shadow: 0 0 0 1px rgba(255,255,255,0.35);
+}
+
+@media (max-width: 520px) {
+.language-switcher span {
+display: none;
+}
+}
+
+.logo-wrap {
+display: inline-block;
+padding: 10px 14px;
+margin-bottom: 18px;
+background: rgba(3, 20, 52, 0.55);
+border-radius: 20px;
+box-shadow: 0 0 24px rgba(0,0,0,0.28);
+transition: all 0.2s ease;
+}
+
+.logo-wrap img {
+max-width: 50%;
+height: auto;
+display: block;
+margin: auto;
+}
+
+.logo-fallback {
+display: none;
+padding: 10px 18px;
+color: #f4b400;
+font-size: clamp(24px, 6vw, 42px);
+font-weight: bold;
+}
+
+.logo-wrap:hover {
+transform: scale(1.05);
+opacity: 0.9;
+}
+
+
+h1 {
+font-size: 34px;
+margin-bottom: 10px;
+}
+
+.highlight {
+color: #f4b400;
+}
+
+.line {
+height: 6px;
+background: #f4b400;
+border-radius: 10px;
+margin: 20px 0;
+}
+
+.home-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 18px;
+align-items: start;
+}
+
+@media (max-width: 760px) {
+.home-grid {
+grid-template-columns: 1fr;
+}
+}
+
+.section-title {
+margin-top: 0;
+margin-bottom: 14px;
+color: #f4b400;
+}
+
+.training-button-card {
+padding: 14px;
+}
+
+.training-button-card button {
+font-size: 18px;
+}
+
+.level-label {
+display: block;
+margin-top: 7px;
+font-size: 13px;
+font-weight: 600;
+letter-spacing: 0.04em;
+color: #f4b400;
+opacity: 0.82;
+}
+
+.tabs {
+display: none;
+}
+
+.tab {
+padding: 15px;
+border-radius: 15px;
+background: #555;
+color: white;
+font-weight: bold;
+cursor: pointer;
+}
+
+.active {
+background: #b58900;
+}
+
+.card {
+background: #1c1c1c;
+border-radius: 20px;
+padding: 20px;
+box-shadow: 0 0 20px rgba(0,0,0,0.4);
+margin-bottom: 20px;
+}
+
+input, button {
+width: 100%;
+padding: 15px;
+margin-top: 10px;
+border-radius: 12px;
+border: none;
+font-size: 16px;
+box-sizing: border-box;
+}
+
+button {
+background: #b58900;
+color: white;
+font-weight: bold;
+cursor: pointer;
+}
+
+.secondary {
+background: #666;
+}
+
+.choice {
+background: #333;
+}
+
+.training-path {
+display: grid;
+gap: 10px;
+text-align: left;
+margin-top: 14px;
+}
+
+.training-path strong {
+color: #f4b400;
+}
+
+.equation {
+font-size: 24px;
+font-weight: bold;
+color: #f4b400;
+letter-spacing: 0.04em;
+}
+
+.result {
+font-size: 28px;
+margin-top: 20px;
+font-weight: bold;
+color: #f4b400;
+}
+
+.small {
+opacity: 0.85;
+line-height: 1.5;
+}
+
+.feedback {
+font-size: 22px;
+font-weight: bold;
+margin-top: 18px;
+color: #f4b400;
+}
+
+.stepbox {
+background: #111;
+border-radius: 16px;
+padding: 15px;
+margin-top: 15px;
+}
+
+.scorebox {
+background: #000;
+border: 2px solid #b58900;
+border-radius: 16px;
+padding: 12px;
+margin-top: 15px;
+color: #f4b400;
+font-weight: bold;
+}
+
+.bookbutton {
+background:#f4b400;
+color:black;
+font-size:18px;
+}
+
+a {
+color: #f4b400;
+}
+
+.legal-links {
+margin-top: 25px;
+font-size: 14px;
+opacity: 0.8;
+}
+
+.legal-links span {
+cursor: pointer;
+text-decoration: underline;
+margin: 0 6px;
+}
+
+.month-block {
+margin-top: 12px;
+padding: 12px;
+background: #111;
+border-radius: 14px;
+text-align: left;
+}
+
+.month-block strong {
+color: #f4b400;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<nav class="language-switcher" aria-label="Choose language">
+<a href="en.html" lang="en" aria-current="page"><img src="flags/us.svg" alt=""> <span>English</span></a>
+<a href="de.html" lang="de"><img src="flags/de.svg" alt=""> <span>Deutsch</span></a>
+<a href="fr-ca.html" lang="fr-CA"><img src="flags/ca.svg" alt=""> <span>Français</span></a>
+</nav>
+
+<div class="logo-wrap" onclick="showTab('home')" style="cursor:pointer;">
+<img src="logo.png" alt="bdaymetho.de" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+<span class="logo-fallback">1643 · bday method</span>
+</div>
+
+
+<div class="line"></div>
+
+<h1>
+Find the <span class="highlight">weekday</span><br>
+of any date
+</h1>
+
+<p style="opacity:0.85; margin-top:10px; margin-bottom:20px;">
+Pierre C. Renschler
+</p>
+
+<p style="opacity:0.85; margin-top:-8px; margin-bottom:24px;">
+Also by Pierre C. Renschler:
+<a href="https://whoisann.com" target="_blank" rel="noopener noreferrer">whoisann.com</a>
+</p>
+
+<div id="home">
+<div class="home-grid">
+<div>
+<h2 class="section-title">Did you know?</h2>
+
+<div class="card">
+<h3>Your Birth-Weekday – a special Day <span class="level-label">(Pro)</span></h3>
+<p class="small">Enter your date and discover famous events that happened on the same weekday.</p>
+<input type="date" id="birthInput">
+<button onclick="showBirthWeekday()">Show my weekday</button>
+<div class="result" id="birthResult"></div>
+<div class="small" id="birthEvents"></div>
+</div>
+
+<div class="card">
+<h3>Shared Birth-Weekdays</h3>
+<p class="small">Enter a date. See all dates in the current year that share the same weekday.</p>
+<input type="date" id="sharedInput">
+<button onclick="showSharedDates()">Find matches</button>
+<div class="small" id="sharedResult"></div>
+</div>
+
+<div class="card training-button-card">
+<button onclick="showTab('method')">The Method</button>
+</div>
+</div>
+
+<div>
+<h2 class="section-title">Training</h2>
+
+<div class="card training-button-card">
+<button onclick="showTab('exercise1')">Exercise 1 · 1643</button>
+<span class="level-label">(Pre-Basic)</span>
+<p class="small">Learn the four century anchors.</p>
+</div>
+
+<div class="card training-button-card">
+<button onclick="showTab('exercise2')">Exercise 2 · Find the Doomsday</button>
+<span class="level-label">(Basic)</span>
+<p class="small">Add the century anchor and the year contribution.</p>
+</div>
+
+<div class="card training-button-card">
+<button onclick="showTab('exercise3')">Exercise 3 · Find Any Weekday</button>
+<span class="level-label">(Advanced)</span>
+<p class="small">Use the year’s Doomsday to solve a complete date.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="tabs">
+<div class="tab active" onclick="showTab('exercise1')">Exercise 1</div>
+<div class="tab" onclick="showTab('exercise2')">Exercise 2</div>
+<div class="tab" onclick="showTab('exercise3')">Exercise 3</div>
+<div class="tab" onclick="showTab('method')">The Method</div>
+</div>
+
+<div class="card" id="exercise1" style="display:none;">
+<h2>Exercise 1 · 1643 <span class="level-label">(Pre-Basic)</span></h2>
+<p class="small">Match a century to its anchor. Remember the repeating sequence:</p>
+<p class="equation">1 · 6 · 4 · 3</p>
+
+<div class="scorebox">
+Score: <span data-score>0</span> · Streak: <span data-streak>0</span>
+</div>
+
+<div class="result" id="centuryQuestion">Press start.</div>
+<button onclick="newCenturyQuestion()">Start / New century</button>
+
+<div class="stepbox">
+<p class="small">Which weekday and number belong to this century?</p>
+<button class="choice" onclick="checkCenturyAnchor(1)">Sunday · 1</button>
+<button class="choice" onclick="checkCenturyAnchor(6)">Friday · 6</button>
+<button class="choice" onclick="checkCenturyAnchor(4)">Wednesday · 4</button>
+<button class="choice" onclick="checkCenturyAnchor(3)">Tuesday · 3</button>
+<div class="feedback" id="centuryFeedback"></div>
+</div>
+</div>
+
+<div class="card" id="exercise2" style="display:none;">
+<h2>Exercise 2 · Find the Doomsday <span class="level-label">(Basic)</span></h2>
+<p class="small">First find the century anchor <strong>x</strong>. Then calculate the year contribution <strong>y</strong>. Your answer is their sum <strong>z</strong>: the Doomsday for that year.</p>
+<p class="equation">x + y = z</p>
+<p class="small">For the last two digits <strong>a</strong>: y = (a + floor(a ÷ 4)) mod 7. If x + y is greater than 7, subtract 7.</p>
+
+<div class="scorebox">
+Score: <span data-score>0</span> · Streak: <span data-streak>0</span>
+</div>
+
+<div class="result" id="yearQuestion">Press start.</div>
+<button onclick="newYearQuestion()">Start / New year</button>
+
+<div class="stepbox">
+<p class="small">Step 1: What is <strong>x</strong>, the century anchor?</p>
+<button class="choice" onclick="checkYearAnchor(1)">Sunday · 1</button>
+<button class="choice" onclick="checkYearAnchor(6)">Friday · 6</button>
+<button class="choice" onclick="checkYearAnchor(4)">Wednesday · 4</button>
+<button class="choice" onclick="checkYearAnchor(3)">Tuesday · 3</button>
+<div class="feedback" id="yearAnchorFeedback"></div>
+</div>
+
+<div class="stepbox" id="doomsdayStepBox" style="display:none;">
+<p class="small">Step 2: What is <strong>z</strong>, the year’s Doomsday? Choose the result of <strong>x + y</strong> — not y.</p>
+<div id="doomsdayChoices"></div>
+<div class="feedback" id="doomsdayFeedback"></div>
+</div>
+</div>
+
+<div class="card" id="exercise3" style="display:none;">
+<h2>Exercise 3 · Find Any Weekday <span class="level-label">(Advanced)</span></h2>
+<p class="small">Work through the same two steps. If the date is not itself a Doomsday date, use the month’s known Doomsday to reach the target date.</p>
+
+<div class="scorebox">
+Score: <span data-score>0</span> · Streak: <span data-streak>0</span>
+</div>
+
+<div class="result" id="fullDateQuestion">Press start.</div>
+<button onclick="newFullDateQuestion()">Start / New date</button>
+
+<div class="stepbox">
+<p class="small">Step 1: What is <strong>x</strong>, the century anchor?</p>
+<button class="choice" onclick="checkFullDateAnchor(1)">Sunday · 1</button>
+<button class="choice" onclick="checkFullDateAnchor(6)">Friday · 6</button>
+<button class="choice" onclick="checkFullDateAnchor(4)">Wednesday · 4</button>
+<button class="choice" onclick="checkFullDateAnchor(3)">Tuesday · 3</button>
+<div class="feedback" id="fullDateAnchorFeedback"></div>
+</div>
+
+<div class="stepbox" id="fullDateDoomsdayBox" style="display:none;">
+<p class="small">Step 2: What is <strong>z</strong>, the Doomsday for this year? Again, answer <strong>x + y</strong>, not y.</p>
+<div id="fullDateDoomsdayChoices"></div>
+<div class="feedback" id="fullDateDoomsdayFeedback"></div>
+</div>
+
+<div class="stepbox" id="weekdayStepBox" style="display:none;">
+<p class="small">Step 3: What weekday is the complete date?</p>
+<div id="weekdayChoices"></div>
+<div class="feedback" id="weekdayFeedback"></div>
+</div>
+</div>
+
+<div class="card" id="method" style="display:none;">
+<h2>The bday method</h2>
+<p class="small">
+The bday method is a simple training approach for seeing calendar patterns and finding weekdays mentally.
+It is inspired by the classic Doomsday rule developed by John Horton Conway.
+</p>
+
+<div class="stepbox">
+<p><strong>July 4 and October 31</strong><br>
+always land on the same weekday in the same year.</p>
+</div>
+
+<div class="stepbox">
+<p><strong>04/04 · 06/06 · 08/08 · 10/10 · 12/12</strong><br>
+same pattern. Same system.</p>
+</div>
+
+<div class="stepbox">
+<p><strong>Every 400 years, weekdays repeat.</strong><br>
+June 6, 744 has the same weekday as June 6, 1944.</p>
+</div>
+
+<div class="training-path">
+<div class="stepbox">
+<strong>Exercise 1 · 1643</strong><br>
+Learn the century anchors: Sunday 1, Friday 6, Wednesday 4, Tuesday 3.
+</div>
+<div class="stepbox">
+<strong>Exercise 2 · x + y = z</strong><br>
+x is the century anchor. For the final two year digits a, y = (a + floor(a ÷ 4)) mod 7. The result z is the year’s Doomsday. Always answer z — the sum — not y alone.
+</div>
+<div class="stepbox">
+<strong>Exercise 3 · Any date</strong><br>
+Find z first. Then use the month’s known Doomsday date to reach the weekday of the target date.
+</div>
+</div>
+
+<p class="small">
+Background:
+<a href="https://en.wikipedia.org/wiki/Doomsday_rule" target="_blank" rel="noopener noreferrer">Doomsday rule</a> ·
+<a href="https://en.wikipedia.org/wiki/John_Horton_Conway" target="_blank" rel="noopener noreferrer">John Horton Conway</a>
+</p>
+
+<button class="bookbutton" onclick="window.open('https://www.amazon.com/dp/B0H87VWCYV','_blank')">
+Read the book on Amazon
+</button>
+</div>
+
+<div class="card" id="contact" style="display:none;">
+<h2>Contact</h2>
+<p class="small">
+For questions about the bday method, please contact:
+</p>
+<p><strong>Pierre C. Renschler</strong></p>
+<p><a href="mailto:pc.renschler@gmail.com">pc.renschler@gmail.com</a></p>
+<p class="small">
+Novel project: <a href="https://whoisann.com" target="_blank" rel="noopener noreferrer">whoisann.com</a>
+</p>
+</div>
+
+<div class="card" id="impressum" style="display:none;">
+<h2>Impressum</h2>
+<p class="small">
+Information according to applicable European legal disclosure standards.
+</p>
+<p>
+<strong>Pierre C. Renschler</strong><br>
+87 Impasse de la Petite Trémaillère<br>
+F-71500 Saint-Usuge<br>
+France
+</p>
+<p>
+E-Mail:<br>
+<a href="mailto:pc.renschler@gmail.com">pc.renschler@gmail.com</a>
+</p>
+<p class="small">
+Responsible for the content of this website: Pierre C. Renschler.
+</p>
+</div>
+
+<div class="card" id="privacy" style="display:none;">
+<h2>Privacy Policy</h2>
+<p class="small">
+This website does not use cookies, tracking tools, Google Analytics, advertising trackers, newsletters, contact forms, or user accounts.
+</p>
+<p class="small">
+If you contact the website owner by e-mail, your message and e-mail address will be used only to answer your request.
+</p>
+<p class="small">
+External links may lead to third-party websites. Their own privacy policies apply there.
+</p>
+<p>
+<strong>Contact:</strong><br>
+Pierre C. Renschler<br>
+<a href="mailto:pc.renschler@gmail.com">pc.renschler@gmail.com</a>
+</p>
+</div>
+
+<div style="margin-top:40px; text-align:left;">
+<h2 style="font-size:22px;">
+How is this possible?
+</h2>
+<p style="opacity:0.9; line-height:1.5; font-size:17px;">
+Try this:<br><br>
+Pick any date.<br>
+Guess the weekday.<br><br>
+Now check it above.<br><br>
+Wrong?<br><br>
+Perfect.<br><br>
+That means your brain is guessing.<br>
+Not seeing.
+</p>
+</div>
+
+<div style="margin-top:30px;">
+<button onclick="window.open('https://www.amazon.com/dp/B0H87VWCYV','_blank')" class="bookbutton">
+Read the book on Amazon
+</button>
+</div>
+
+<p style="margin-top:30px; opacity:0.7;">
+Pierre C. Renschler
+</p>
+
+<p style="margin-top:10px; opacity:0.8;">
+<a href="https://whoisann.com" target="_blank" rel="noopener noreferrer">whoisann.com</a>
+</p>
+
+<div class="legal-links">
+<span onclick="showTab('contact')">Contact</span> ·
+<span onclick="showTab('impressum')">Impressum</span> ·
+<span onclick="showTab('privacy')">Privacy Policy</span>
+</div>
+
+</div>
+
+<script>
+let currentCentury = null;
+let currentYearQuestion = null;
+let currentFullDate = null;
+let score = 0;
+let streak = 0;
+let centurySolved = false;
+let yearAnchorSolved = false;
+let doomsdaySolved = false;
+let fullDateAnchorSolved = false;
+let fullDateDoomsdaySolved = false;
+let weekdaySolved = false;
+
+const START_YEAR = 1700;
+const END_YEAR = 2099;
+
+const weekdayEvents = {
+0: [
+"Dec 7, 1941 — Pearl Harbor attack",
+"Jun 18, 1815 — Battle of Waterloo",
+"Feb 11, 1990 — Nelson Mandela released",
+"Aug 13, 1961 — Berlin Wall construction begins",
+"Jul 20, 1969 — Apollo 11 Moon landing",
+"Jun 16, 1963 — First woman in space",
+"Oct 1, 1347 — Black Death reaches Europe"
+],
+1: [
+"Jul 21, 1969 — First human steps on the Moon",
+"Aug 6, 1945 — Hiroshima bombing",
+"Apr 15, 1912 — Titanic sinks",
+"Apr 6, 1896 — First modern Olympic Games open",
+"Oct 19, 1987 — Black Monday stock market crash",
+"Oct 22, 1962 — Cuban Missile Crisis TV address",
+"Nov 11, 1918 — World War I armistice"
+],
+2: [
+"Jun 6, 1944 — D-Day landings",
+"Sep 11, 2001 — 9/11 attacks",
+"Jul 28, 1914 — World War I begins",
+"May 8, 1945 — V-E Day",
+"Jul 14, 1789 — Storming of the Bastille",
+"Jun 26, 1945 — United Nations Charter signed",
+"Jan 9, 2007 — First iPhone announced"
+],
+3: [
+"Aug 1, 1798 — Battle of the Nile",
+"Oct 12, 1492 — Columbus reaches the Americas",
+"Oct 24, 1945 — United Nations founded",
+"Apr 12, 1961 — First human in space",
+"Mar 11, 2020 — WHO declares COVID-19 a pandemic",
+"Oct 3, 1990 — German reunification",
+"Jul 16, 1969 — Apollo 11 launches"
+],
+4: [
+"Jul 4, 1776 — U.S. Declaration of Independence",
+"Nov 9, 1989 — Fall of the Berlin Wall",
+"Dec 17, 1903 — Wright brothers’ first flight",
+"Apr 4, 1968 — Martin Luther King Jr. assassinated",
+"Apr 12, 1945 — Franklin D. Roosevelt dies",
+"Jan 1, 1863 — Emancipation Proclamation takes effect",
+"Jun 23, 2016 — Brexit referendum"
+],
+5: [
+"Nov 22, 1963 — John F. Kennedy assassinated",
+"Sep 1, 1939 — Germany invades Poland",
+"Oct 4, 1957 — Sputnik 1 launches",
+"Aug 9, 1974 — Richard Nixon resigns",
+"Dec 21, 2012 — End of the Maya Long Count cycle",
+"May 10, 1940 — Germany invades France, Belgium, Netherlands, Luxembourg",
+"Nov 9, 1918 — German Kaiser abdicates"
+],
+6: [
+"Apr 26, 1986 — Chernobyl disaster",
+"Jun 28, 1919 — Treaty of Versailles signed",
+"Apr 15, 1865 — Abraham Lincoln dies",
+"May 5, 1821 — Napoleon dies",
+"Sep 14, 1901 — William McKinley dies",
+"Aug 22, 1485 — Richard III dies at Bosworth",
+"Jun 17, 1972 — Watergate break-in"
+]
+};
+
+function randomDateBetween(startYear, endYear) {
+let start = new Date(startYear,0,1);
+let end = new Date(endYear,11,31);
+return new Date(start.getTime() + Math.random()*(end.getTime()-start.getTime()));
+}
+
+function formatDateInput(date) {
+let y = date.getFullYear();
+let m = String(date.getMonth() + 1).padStart(2, "0");
+let d = String(date.getDate()).padStart(2, "0");
+return y + "-" + m + "-" + d;
+}
+
+function updateScore() {
+document.querySelectorAll("[data-score]").forEach(element => {
+element.innerText = score;
+});
+document.querySelectorAll("[data-streak]").forEach(element => {
+element.innerText = streak;
+});
+}
+
+function showTab(tabId) {
+let tabs = ['home','exercise1','exercise2','exercise3','method','contact','impressum','privacy'];
+
+tabs.forEach(id => {
+document.getElementById(id).style.display = 'none';
+});
+
+document.getElementById(tabId).style.display = 'block';
+
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+let labels = {
+exercise1: 'Exercise 1',
+exercise2: 'Exercise 2',
+exercise3: 'Exercise 3',
+method: 'The Method'
+};
+
+document.querySelectorAll('.tab').forEach(t => {
+if (t.innerText === labels[tabId]) {
+t.classList.add('active');
+}
+});
+
+window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showBirthWeekday() {
+let input = document.getElementById("birthInput").value;
+if (!input) return;
+
+let parts = input.split("-");
+let date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+let weekday = days[date.getDay()];
+
+document.getElementById("birthResult").innerText = weekday;
+
+let events = weekdayEvents[date.getDay()].map(event => "• " + event).join("<br>");
+document.getElementById("birthEvents").innerHTML =
+"<br><strong>7 famous events on a " + weekday + ":</strong><br>" + events;
+}
+
+function showSharedDates() {
+let input = document.getElementById("sharedInput").value;
+if (!input) return;
+
+let parts = input.split("-");
+let inputMonth = Number(parts[1]) - 1;
+let inputDay = Number(parts[2]);
+let year = new Date().getFullYear();
+
+if (inputMonth === 1 && inputDay === 29) {
+let isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+if (!isLeap) {
+document.getElementById("sharedResult").innerText =
+"This date doesn’t exist this year.";
+return;
+}
+}
+
+let selectedDate = new Date(year, inputMonth, inputDay);
+
+if (selectedDate.getMonth() !== inputMonth || selectedDate.getDate() !== inputDay) {
+document.getElementById("sharedResult").innerText =
+"This date doesn’t exist this year.";
+return;
+}
+
+let targetDay = selectedDate.getDay();
+
+let monthNames = getMonthNames();
+
+let grouped = {};
+
+for (let m = 0; m < 12; m++) {
+grouped[m] = [];
+for (let d = 1; d <= 31; d++) {
+let test = new Date(year, m, d);
+if (test.getMonth() === m && test.getDay() === targetDay) {
+grouped[m].push(d);
+}
+}
+}
+
+let output = "<br><strong>Same weekday in " + year + ":</strong>";
+
+for (let m = 0; m < 12; m++) {
+if (grouped[m].length > 0) {
+output += "<div class='month-block'><strong>" + monthNames[m] + "</strong><br>" + grouped[m].join(" · ") + "</div>";
+}
+}
+
+document.getElementById("sharedResult").innerHTML = output;
+}
+
+function formatDate(date) {
+let months = getMonthNames();
+
+return months[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
+}
+
+function getMonthNames() {
+return [
+"January","February","March","April","May","June",
+"July","August","September","October","November","December"
+];
+}
+
+function getCenturyAnchor(year) {
+let century = Math.floor(year / 100) % 4;
+if (century === 0) return 3;
+if (century === 1) return 1;
+if (century === 2) return 6;
+if (century === 3) return 4;
+}
+
+function getYearContribution(year) {
+let y = year % 100;
+return (y + Math.floor(y / 4)) % 7;
+}
+
+function normalizeWeekday(number) {
+return ((number - 1) % 7 + 7) % 7 + 1;
+}
+
+function getDoomsday(year) {
+return normalizeWeekday(getCenturyAnchor(year) + getYearContribution(year));
+}
+
+function weekdayName(number) {
+let days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+return days[normalizeWeekday(number) - 1];
+}
+
+function anchorName(anchor) {
+return weekdayName(anchor) + " · " + anchor;
+}
+
+function buildWeekdayChoices(containerId, handlerName) {
+let output = "";
+for (let number = 1; number <= 7; number++) {
+output += '<button class="choice" onclick="' + handlerName + '(' + number + ')">' +
+weekdayName(number) + " · " + number + "</button>";
+}
+document.getElementById(containerId).innerHTML = output;
+}
+
+function yearEquation(year) {
+let shortYear = year % 100;
+let leapShare = Math.floor(shortYear / 4);
+let x = getCenturyAnchor(year);
+let y = getYearContribution(year);
+let raw = x + y;
+let z = normalizeWeekday(raw);
+let wrap = raw > 7 ? "; subtract 7" : "";
+return "y = (" + shortYear + " + " + leapShare + ") mod 7 = " + y +
+". Therefore x + y = " + x + " + " + y + " = " + raw + wrap +
+", so z = " + z + " (" + weekdayName(z) + ").";
+}
+
+function correctPoint() {
+score += 1;
+streak += 1;
+updateScore();
+}
+
+function wrongPoint() {
+streak = 0;
+updateScore();
+}
+
+function newCenturyQuestion() {
+let centuries = [1700, 1800, 1900, 2000];
+let nextCentury = centuries[Math.floor(Math.random() * centuries.length)];
+
+if (centuries.length > 1 && nextCentury === currentCentury) {
+nextCentury = centuries[(centuries.indexOf(nextCentury) + 1 + Math.floor(Math.random() * 3)) % centuries.length];
+}
+
+currentCentury = nextCentury;
+centurySolved = false;
+document.getElementById("centuryQuestion").innerText = nextCentury + "–" + (nextCentury + 99);
+document.getElementById("centuryFeedback").innerText = "";
+}
+
+function checkCenturyAnchor(choice) {
+if (currentCentury === null) {
+document.getElementById("centuryFeedback").innerText = "Start with a century first.";
+return;
+}
+
+if (centurySolved) {
+document.getElementById("centuryFeedback").innerText = "Century already solved. Start a new one.";
+return;
+}
+
+let correct = getCenturyAnchor(currentCentury);
+
+if (choice === correct) {
+centurySolved = true;
+correctPoint();
+document.getElementById("centuryFeedback").innerText =
+"Correct: the " + currentCentury + "s use " + anchorName(correct) + ".";
+} else {
+wrongPoint();
+document.getElementById("centuryFeedback").innerText =
+"Not yet. Follow the repeating 1643 sequence.";
+}
+}
+
+function newYearQuestion() {
+currentYearQuestion = START_YEAR + Math.floor(Math.random() * (END_YEAR - START_YEAR + 1));
+yearAnchorSolved = false;
+doomsdaySolved = false;
+document.getElementById("yearQuestion").innerText = currentYearQuestion;
+document.getElementById("yearAnchorFeedback").innerText = "";
+document.getElementById("doomsdayFeedback").innerText = "";
+document.getElementById("doomsdayStepBox").style.display = "none";
+}
+
+function checkYearAnchor(choice) {
+if (currentYearQuestion === null) {
+document.getElementById("yearAnchorFeedback").innerText = "Start with a year first.";
+return;
+}
+
+if (yearAnchorSolved) {
+document.getElementById("yearAnchorFeedback").innerText = "Anchor already solved. Continue with Step 2.";
+return;
+}
+
+let correct = getCenturyAnchor(currentYearQuestion);
+
+if (choice === correct) {
+yearAnchorSolved = true;
+correctPoint();
+document.getElementById("yearAnchorFeedback").innerText =
+"Correct. x = " + correct + " (" + weekdayName(correct) + ").";
+document.getElementById("doomsdayStepBox").style.display = "block";
+} else {
+wrongPoint();
+document.getElementById("yearAnchorFeedback").innerText =
+"Not yet. Use 1643 to find x.";
+}
+}
+
+function checkDoomsday(choice) {
+if (currentYearQuestion === null) {
+document.getElementById("doomsdayFeedback").innerText = "Start with a year first.";
+return;
+}
+
+if (!yearAnchorSolved) {
+document.getElementById("doomsdayFeedback").innerText = "Find x, the century anchor, first.";
+return;
+}
+
+if (doomsdaySolved) {
+document.getElementById("doomsdayFeedback").innerText = "Doomsday already solved. Start a new year.";
+return;
+}
+
+let correct = getDoomsday(currentYearQuestion);
+
+if (choice === correct) {
+doomsdaySolved = true;
+correctPoint();
+document.getElementById("doomsdayFeedback").innerText =
+"Correct. " + yearEquation(currentYearQuestion) + " z is the Doomsday.";
+} else {
+wrongPoint();
+document.getElementById("doomsdayFeedback").innerText =
+"Not yet. Your answer must be z, the result of x + y — not y by itself.";
+}
+}
+
+function isLeapYear(year) {
+return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+
+function monthDoomsday(year, monthIndex) {
+let days = [isLeapYear(year) ? 4 : 3, isLeapYear(year) ? 29 : 28, 14, 4, 9, 6, 11, 8, 5, 10, 7, 12];
+return days[monthIndex];
+}
+
+function newFullDateQuestion() {
+currentFullDate = randomDateBetween(START_YEAR, END_YEAR);
+fullDateAnchorSolved = false;
+fullDateDoomsdaySolved = false;
+weekdaySolved = false;
+document.getElementById("fullDateQuestion").innerText = formatDate(currentFullDate);
+document.getElementById("fullDateAnchorFeedback").innerText = "";
+document.getElementById("fullDateDoomsdayFeedback").innerText = "";
+document.getElementById("weekdayFeedback").innerText = "";
+document.getElementById("fullDateDoomsdayBox").style.display = "none";
+document.getElementById("weekdayStepBox").style.display = "none";
+}
+
+function checkFullDateAnchor(choice) {
+if (!currentFullDate) {
+document.getElementById("fullDateAnchorFeedback").innerText = "Start with a date first.";
+return;
+}
+
+if (fullDateAnchorSolved) {
+document.getElementById("fullDateAnchorFeedback").innerText = "Anchor already solved. Continue with Step 2.";
+return;
+}
+
+let year = currentFullDate.getFullYear();
+let correct = getCenturyAnchor(year);
+
+if (choice === correct) {
+fullDateAnchorSolved = true;
+correctPoint();
+document.getElementById("fullDateAnchorFeedback").innerText =
+"Correct. x = " + correct + " (" + weekdayName(correct) + ").";
+document.getElementById("fullDateDoomsdayBox").style.display = "block";
+} else {
+wrongPoint();
+document.getElementById("fullDateAnchorFeedback").innerText =
+"Not yet. Use 1643 to find x.";
+}
+}
+
+function checkFullDateDoomsday(choice) {
+if (!currentFullDate) {
+document.getElementById("fullDateDoomsdayFeedback").innerText = "Start with a date first.";
+return;
+}
+
+if (!fullDateAnchorSolved) {
+document.getElementById("fullDateDoomsdayFeedback").innerText = "Find x, the century anchor, first.";
+return;
+}
+
+if (fullDateDoomsdaySolved) {
+document.getElementById("fullDateDoomsdayFeedback").innerText = "Doomsday already solved. Continue with Step 3.";
+return;
+}
+
+let year = currentFullDate.getFullYear();
+let correct = getDoomsday(year);
+
+if (choice === correct) {
+fullDateDoomsdaySolved = true;
+correctPoint();
+document.getElementById("fullDateDoomsdayFeedback").innerText =
+"Correct. " + yearEquation(year);
+document.getElementById("weekdayStepBox").style.display = "block";
+} else {
+wrongPoint();
+document.getElementById("fullDateDoomsdayFeedback").innerText =
+"Not yet. Choose z, the result of x + y — not y.";
+}
+}
+
+function checkFullWeekday(choice) {
+if (!currentFullDate) {
+document.getElementById("weekdayFeedback").innerText = "Start with a date first.";
+return;
+}
+
+if (!fullDateDoomsdaySolved) {
+document.getElementById("weekdayFeedback").innerText = "Find the year’s Doomsday first.";
+return;
+}
+
+if (weekdaySolved) {
+document.getElementById("weekdayFeedback").innerText = "Weekday already solved. Start a new date.";
+return;
+}
+
+let correct = currentFullDate.getDay() + 1;
+
+if (choice === correct) {
+weekdaySolved = true;
+correctPoint();
+
+let year = currentFullDate.getFullYear();
+let monthIndex = currentFullDate.getMonth();
+let targetDay = currentFullDate.getDate();
+let knownDay = monthDoomsday(year, monthIndex);
+let z = getDoomsday(year);
+let offset = targetDay - knownDay;
+let monthName = getMonthNames()[monthIndex];
+
+if (offset === 0) {
+document.getElementById("weekdayFeedback").innerText =
+"Correct. This date is itself a Doomsday date, so z = " + z + " (" + weekdayName(z) + ") is already the answer.";
+} else {
+let signedOffset = offset > 0 ? "+" + offset : String(offset);
+let reducedOffset = ((offset % 7) + 7) % 7;
+document.getElementById("weekdayFeedback").innerText =
+"Correct. " + monthName + " " + knownDay + " is a Doomsday date. The target is " +
+signedOffset + " days away (equivalent to +" + reducedOffset + "). From z = " + z +
+", that gives " + correct + " (" + weekdayName(correct) + ").";
+}
+} else {
+wrongPoint();
+document.getElementById("weekdayFeedback").innerText =
+"Not yet. Start from the month’s known Doomsday date, then count to the target date.";
+}
+}
+
+buildWeekdayChoices("doomsdayChoices", "checkDoomsday");
+buildWeekdayChoices("fullDateDoomsdayChoices", "checkFullDateDoomsday");
+buildWeekdayChoices("weekdayChoices", "checkFullWeekday");
+</script>
+
+</body>
+</html>
